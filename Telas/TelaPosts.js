@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
 import Header from '../Componentes/Header';
 import firebase from '../servicos/firebase';
 import { getDatabase, ref, get } from "firebase/database";
@@ -40,10 +40,13 @@ const PostsScreen = ({ navigation, route }) => {
             data={posts}
             keyExtractor={(item) => item.postId}
             renderItem={({ item }) => (
-              <View style={styles.postContainer}>
-                <Text style={styles.userName}>{item.userName}:</Text>
-                <Text style={styles.container}>{item.legenda}</Text>
-              </View>  
+              <View style={{paddingTop: 10}}>
+                {item.foto && (<Image source={{uri: item.foto}} style={styles.foto}/>)}
+                <View style={styles.postContainer}>
+                  <Text style={styles.userName}>{item.userName}:</Text>
+                  <Text style={styles.container}>{item.legenda}</Text>
+                </View>  
+              </View>
             )}
           />  
         </View>
@@ -68,6 +71,11 @@ const styles = StyleSheet.create({
     },
     header: {
         flex: 0.25
+    },
+    foto: {
+      alignSelf: 'center',
+      width:'80%',
+      aspectRatio: 1
     }
 });
 

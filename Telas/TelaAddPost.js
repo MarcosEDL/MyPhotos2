@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, StyleSheet, Button } from 'react-native';
+import { View, Image, StyleSheet, Button, Text } from 'react-native';
 import Header from '../Componentes/Header';
 import firebase from '../servicos/firebase'
 import { getDatabase, ref, update } from "firebase/database"
+import { getDownloadURL, getStorage, ref as storageRef, uploadBytes } from "firebase/storage"
 import { Picker } from '@react-native-picker/picker'
 
 const TelaAddPost = ({navigation, route}) => {
   const [selectedTag, setSelectedTag] = useState('')
   const [availableTags, setAvailableTags] = useState([])
+  const [postFailed, setPostFailed] = useState(false)
+
   const image = route.params.image ? route.params.image : null
+  
   const searchQuotes = async () => {
     url = ""
     if (selectedTag.length === 0) {
@@ -18,21 +22,34 @@ const TelaAddPost = ({navigation, route}) => {
     }
     fetch(url)
       .then((response) => response.json())
-      .then((data) => {
+      .then(async (data) => {
         const database = getDatabase(firebase)
-            var postId = Date.now().toString()
+        const storage = getStorage(firebase)
+        const postId = Date.now().toString()
+        var imageUrl = ''
+        if(image) {
+          const imageRef = storageRef(storage, 'images/' + postId + '.jpg')
+          const imageData = await fetch(image).then((response) => response.blob())
+          const uploadTask = await uploadBytes(imageRef, imageData)
+          imageUrl = await getDownloadURL(imageRef)
+        }
             const userRef = ref(database, 'users/'+ route.params.uid+"/posts/"+postId)
-            update(userRef, { legenda: data[0].content })
+            update(userRef, { legenda: data[0].content, foto: imageUrl })
               .then(() => {
                 console.log('Post Criado:', data[0].content);
+                setPostFailed(false)
                 navigation.navigate('posts', {uid: route.params.uid})
               })
               .catch((error) => {
+                setPostFailed(true)
                 console.error("Erro ao adicionar usuário:", error);
               })
         })
-        .catch((error) => console.error(error))
+        .catch((error) => {
+          setPostFailed(true)
+          console.error(error)})
   }
+
   useEffect(() => {
     fetch('https://api.quotable.io/tags')
       .then((response) => response.json())
@@ -41,10 +58,10 @@ const TelaAddPost = ({navigation, route}) => {
       })
       .catch((error) => console.error(error));
   }, [])
-  console.log(image)
   return(
     <View style={styles.container}>
       <Header showNav={true} navigation={navigation} route={route} />
+      {postFailed ? <Text style={styles.postFailed}>Falha ao enviar o Post</Text> : null}
       {image ? <Image source={{ uri: image }} style={styles.image} /> : null}
       <View style={styles.contentContainer}>
         <Button
@@ -63,7 +80,7 @@ const TelaAddPost = ({navigation, route}) => {
         <Button
           onPress={searchQuotes}
           title="Gerar post"
-          color="grey"
+          color="blue"
         />
       </View>  
     </View>
@@ -87,6 +104,10 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     resizeMode: 'contain'
+  },
+  postFailed: {
+    fontWeight: 'bold',
+    color: 'red'
   }
 });
 

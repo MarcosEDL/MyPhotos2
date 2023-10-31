@@ -1,7 +1,10 @@
 import React, { useState, useEffect} from 'react';
-import { StyleSheet, Text, View, Button, Image } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, Pressable } from 'react-native';
 import { Camera } from 'expo-camera';
+import Header from '../Componentes/Header';
+
 function TelaCamera({navigation, route}) {
+
     const [hasPermission, setHasPermission] = useState(null)
     const [camera, setCamera] = useState(null);
     const [image, setImage] = useState(null);
@@ -13,60 +16,65 @@ function TelaCamera({navigation, route}) {
         setHasPermission(status === 'granted')
       })();
     }, [route.params]);
+
     const takePicture = async () => {
       if(camera){
         const data = await camera.takePictureAsync(null)
         setImage(data)
       }  
     }
+
+    const switchCamera = () => {
+      setType( type === Camera.Constants.Type.back ? 
+                            Camera.Constants.Type.front : Camera.Constants.Type.back
+      )
+    }
+
+    if(!hasPermission) {
+      return (
+        <View style={styles.container}>
+          <Text>Permissão da câmera negada!</Text>
+        </View>
+      )
+    }
     return (
       <View style={styles.container}>
-        {hasPermission ? (
-          <View style={styles.cameraContainer}>
-            {image ? (
-              <View style={styles.container}>
-                  <Image source={{ uri: image.uri }} style={styles.image}/>
-                  <Button
-                      color='grey'
-                      title="Tirar nova foto"
-                      onPress={() => {
-                          setImage(null)
-                      }}
-                  />
-                  <Button
-                      color='grey'
-                      title="Usar essa foto"
-                      onPress={() => {
-                          navigation.navigate('addPost', {uid: route.params.uid, image: image.uri})
-                      }}
-                  />
-              </View>
-            ) : (
-              <Camera
-                ref={(ref) => setCamera(ref)}
-                style={styles.camera}
-                type={type}
-                ratio='1:1'
+        <View style={styles.header}>
+          <Header showNav={false} />
+        </View>
+        {image ? (
+          <View style={styles.container2}>
+              <Image source={{ uri: image.uri }} style={styles.image}/>
+              <Button
+                  color='blue'
+                  title="Tirar nova foto"
+                  onPress={() => {
+                      setImage(null)
+                  }}
               />
-            )}
+              <Button
+                  title="Usar essa foto"
+                  onPress={() => {
+                      navigation.navigate('addPost', {uid: route.params.uid, image: image.uri})
+                  }}
+              />
           </View>
         ) : (
-          <Text>Permissão da câmera negada!</Text>  
-        )}
-      {!image && (
-          <View>
-          <Button
-              color='grey'
-              title="Trocar Câmera"
-              onPress={() => {
-              setType(
-                  type === Camera.Constants.Type.back
-                  ? Camera.Constants.Type.front
-                  : Camera.Constants.Type.back
-              );
-              }}
-          />
-          <Button title="Tirar Foto" onPress={() => takePicture()} />      
+          <View style={styles.container2}>
+            <Camera
+              ref={(ref) => setCamera(ref)}
+              style={styles.camera}
+              type={type}
+            >
+              <View style={styles.BotoesCamera}>
+                <Pressable onPress={() => {switchCamera()}}>
+                    <Image source={require('../assets/changeCamera.png')} resizeMode="contain" />
+                </Pressable>
+                <Pressable onPress={() => {takePicture()}}>
+                  <Image source={require('../assets/camera.png')} resizeMode="contain" />
+                </Pressable>
+              </View>
+            </Camera>
           </View>
         )}
       </View>
@@ -75,19 +83,27 @@ function TelaCamera({navigation, route}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignContent: 'center'
+    },
+    container2: {
+      flex: 0.85,
+    },
+    header: {
+      flex: 0.15
     },
     camera: {
-        flex: 1,
-        aspectRatio: 1,
+      flex: 1
     },
-    cameraContainer: {
-        flex: 1,
-        flexDirection: 'row'
+    BotoesCamera: {
+      flexDirection: 'row',
+      alignItems: 'flex-end',
+      justifyContent: 'space-around',
+      backgroundColor: 'transparent',
+      padding: 20,
+      flex: 1
     },
     image: {
-        flex: 1,
-        resizeMode: 'contain'
+      flex: 1,
+      resizeMode: 'contain'
     }
 })
 
