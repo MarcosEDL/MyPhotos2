@@ -6,6 +6,7 @@ import TelaPosts from './Telas/TelaPosts';
 import TelaMeusPosts from './Telas/TelaMeusPosts';
 import TelaAddPost from './Telas/TelaAddPost';
 import TelaCamera from './Telas/TelaCamera';
+import TelaLocalizacao from './Telas/TelaLocalizacao';
 
 const Stack = createStackNavigator()
 export default function App() {
@@ -13,34 +14,39 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="login">
         <Stack.Screen
-          options={{headerShown: false }}
           name="login"
           component={TelaLogin}
+          options={{headerShown: false }}
         />
         <Stack.Screen
           name="posts"
-          options={{ headerShown: false}}
           component={TelaPosts}
+          options={{ headerShown: false}}
         />
         <Stack.Screen
           name="meusPosts"
-          options={{ headerShown: false }}
           component={TelaMeusPosts}
+          options={{ headerShown: false }}
         />
         <Stack.Screen  
           name="addPost"
-          options={{ headerShown: false }}
           component={TelaAddPost}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
-          options={{ headerShown: false }}
           name="addUser"
           component={TelaAddUser}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
-          options={{ headerShown: false }}
           name="camera"
           component={TelaCamera}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="localizacao"
+          component={TelaLocalizacao}
+          options={{headerShown: false}}
         />
       </Stack.Navigator>
     </NavigationContainer>
