@@ -2,9 +2,12 @@ import React, { useState, useEffect} from 'react';
 import { StyleSheet, Text, View, Button, Image, Pressable } from 'react-native';
 import { Camera } from 'expo-camera';
 import Header from '../Componentes/Header';
+import {Picker} from '@react-native-picker/picker'
 
 function TelaCamera({navigation, route}) {
 
+    const [zoom, setZoom] = useState(0)
+    const [flashMode, setFlashMode] = useState(Camera.Constants.FlashMode.off);
     const [hasPermission, setHasPermission] = useState(null)
     const [camera, setCamera] = useState(null);
     const [image, setImage] = useState(null);
@@ -65,6 +68,8 @@ function TelaCamera({navigation, route}) {
               ref={(ref) => setCamera(ref)}
               style={styles.camera}
               type={type}
+              flashMode={flashMode}
+              zoom={zoom}
             >
               <View style={styles.BotoesCamera}>
                 <Pressable onPress={() => {switchCamera()}}>
@@ -73,14 +78,33 @@ function TelaCamera({navigation, route}) {
                 <Pressable onPress={() => {takePicture()}}>
                   <Image source={require('../assets/camera.png')} resizeMode="contain" />
                 </Pressable>
+                <View style={styles.zoomButton}>
+                  <Pressable onPress={() => {setZoom(Math.min(zoom + 0.1, 1.0))}}>
+                    <Image source={require('../assets/zoom-in.png')} resizeMode="contain" />
+                  </Pressable>
+                  <Pressable onPress={() => {setZoom(Math.min(zoom - 0.1, 1.0))}}>
+                    <Image source={require('../assets/zoom-out.png')} resizeMode="contain" />
+                  </Pressable>
+                </View>
               </View>
             </Camera>
+              <Picker
+                  selectedValue={flashMode}
+                  onValueChange={(itemValue, itemIndex) => {setFlashMode(itemValue); console.log(flashMode)}}
+              >
+                <Picker.Item label="Automático" value={Camera.Constants.FlashMode.auto} />
+                <Picker.Item label="Ligado" value={Camera.Constants.FlashMode.on} />
+                <Picker.Item label="Desligado" value={Camera.Constants.FlashMode.off} />
+              </Picker>
           </View>
         )}
       </View>
     )
 }
 const styles = StyleSheet.create({
+    zoomButton: {
+      flexDirection: 'column',
+    },
     container: {
         flex: 1,
     },

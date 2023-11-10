@@ -14,7 +14,53 @@ const TelaAddPost = ({navigation, route}) => {
   const [location, setLocation] = useState(null)
 
   const image = route.params.image ? route.params.image : null
-  
+
+  //alteração começou aqui
+  const uploadImage = async (image, postId) => {
+    const storage = getStorage(firebase)
+    const imageRef = storageRef(storage, 'images/' + postId + '.jpg')
+    const imageData = await fetch(image).then((response) => response.blob())
+    const uploadTask = await uploadBytes(imageRef, imageData)
+    return getDownloadURL(imageRef);
+  }
+
+  const createPost = async (quote, imageUrl, location, uid, postId) => {
+    const database = getDatabase(firebase)
+    const userRef = ref(database, 'users/' + route.params.uid+"/posts/"+postId)
+    return update(userRef, { legenda: quote.content, foto: imageUrl, geolocalizacao: location })
+  }
+
+  const savePost = async () => {
+    const postId = Date.now().toString()
+    let url = '';
+    if (selectedTag.length === 0) {
+      url = 'https://api.quotable.io/quotes/random';
+    } else {
+      url = 'https://api.quotable.io/quotes/random?tags=' + selectedTag;
+    }
+
+    fetch(url)
+      .then((response) => response.json())
+      .then(async quoteData => {
+        if(quoteData.length > 0) {
+          const imageUrl = image ? await uploadImage(image, postId) : ''
+          await createPost(quoteData[0], imageUrl, location, route.params.uid, postId);
+          console.log('Post criado: ', quoteData[0].content);
+          setPostFailed(false);
+          navigation.navigate('posts', { uid: route.params.uid });
+        } else {
+          console.log('Sem citação nessa tag');
+          setPostFailed(true);
+        }
+      })
+      .catch(error => {
+        setPostFailed(true);
+        console.error(error);
+      })
+  };
+  //fim da parte nova do código
+
+/* parte do código que foi descontinuada pelo professor
   const searchQuotes = async () => {
     url = ""
     if (selectedTag.length === 0) {
@@ -56,6 +102,9 @@ const TelaAddPost = ({navigation, route}) => {
         setPostFailed(true)
         console.error(error)})
   }
+  */
+  //aqui continua normal o código
+
 
   const searchTags = () => {
     fetch('https://api.quotable.io/tags')
@@ -98,7 +147,8 @@ const TelaAddPost = ({navigation, route}) => {
           ))}
         </Picker>
         <Button
-          onPress={searchQuotes}
+          //anteriormente estava onPress={searchQuotes}
+          onPress={savePost}
           title="Gerar post"
           color="blue"
         />
