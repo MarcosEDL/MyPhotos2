@@ -72,19 +72,19 @@ function TelaCamera({navigation, route}) {
               zoom={zoom}
             >
               <View style={styles.BotoesCamera}>
-                <Pressable onPress={() => {switchCamera()}}>
-                    <Image source={require('../assets/changeCamera.png')} resizeMode="contain" />
-                </Pressable>
-                <Pressable onPress={() => {takePicture()}}>
-                  <Image source={require('../assets/camera.png')} resizeMode="contain" />
-                </Pressable>
-                <View style={styles.zoomButton}>
-                  <Pressable onPress={() => {setZoom(Math.min(zoom + 0.1, 1.0))}}>
-                    <Image source={require('../assets/zoom-in.png')} resizeMode="contain" />
-                  </Pressable>
-                  <Pressable onPress={() => {setZoom(Math.min(zoom - 0.1, 1.0))}}>
-                    <Image source={require('../assets/zoom-out.png')} resizeMode="contain" />
-                  </Pressable>
+              <Pressable onPress={() => {switchCamera()}}>
+                <Image source={require('../assets/changeCamera.png')} style={styles.buttonImage} resizeMode="contain" />
+              </Pressable>
+              <Pressable onPress={() => {takePicture()}}>
+                <Image source={require('../assets/camera.png')} style={styles.buttonImage} resizeMode="contain" />
+              </Pressable>
+              <View style={styles.zoomButton}>
+              <Pressable onPress={() => {setZoom(Math.min(zoom + 0.1, 1.0))}}>
+                <Image source={require('../assets/zoom-in.png')} style={styles.buttonImage} resizeMode="contain" />
+              </Pressable>
+              <Pressable onPress={() => {setZoom(Math.min(zoom - 0.1, 1.0))}}>
+                <Image source={require('../assets/zoom-out.png')} style={styles.buttonImage} resizeMode="contain" />
+              </Pressable>
                 </View>
               </View>
             </Camera>
@@ -119,16 +119,22 @@ const styles = StyleSheet.create({
     },
     BotoesCamera: {
       flexDirection: 'row',
-      alignItems: 'flex-end',
       justifyContent: 'space-around',
+      alignItems: 'center',
       backgroundColor: 'transparent',
       padding: 20,
-      flex: 1
+      position: 'absolute',
+      bottom: 0,
+      width: '100%',
     },
     image: {
       flex: 1,
       resizeMode: 'contain'
-    }
+    },
+    buttonImage: {
+      width: 35,
+      height: 35
+    },  
 })
 
 export default TelaCamera

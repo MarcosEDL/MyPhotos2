@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Image, Button } from 'react-native';
 import Header from '../Componentes/Header';
 import firebase from '../servicos/firebase';
 import { getDatabase, ref, get } from "firebase/database";
@@ -46,17 +46,24 @@ const PostsScreen = ({ navigation, route }) => {
                   <Text style={styles.userName}>{item.userName}:</Text>
                   <Text style={styles.container}>{item.legenda}</Text>
                 </View>  
+                <Button
+                onPress={() => {navigation.navigate('localizacao', {uid: route.params.uid, post: item })}}
+                title="Localização"
+                color={'#FF1493'}
+              />
               </View>
             )}
           />  
         </View>
       </View>
+      
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#fbb8e1'
     },
     postContainer: {
         padding: 10,

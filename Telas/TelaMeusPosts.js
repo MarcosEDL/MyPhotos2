@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Alert, Pressable, Image } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Alert, Pressable, Image, Button } from 'react-native';
 import Header from '../Componentes/Header';
 import firebase from '../servicos/firebase';
 import { getDatabase, ref, get, remove } from "firebase/database";
 import { getStorage, ref as storageRef, deleteObject } from "firebase/storage";
+import PostsScreen from './TelaPosts';
+import TelaLocalizacao from './TelaLocalizacao';
 
 const TelaMeusPosts = ({ navigation, route }) => {
   const [posts, setPosts] = useState([]);
@@ -67,9 +69,14 @@ const TelaMeusPosts = ({ navigation, route }) => {
                   <Image source={require('../assets/trash.png')} resizeMode="contain" style={styles.image} />
               </Pressable>
               </View>
+              <Button
+                onPress={() => {navigation.navigate('localizacao', {uid: route.params.uid, post: item })}}
+                title="Localização"
+                color={'#FF1493'}
+              />
               </View>
             )}
-          />  
+          /> 
         </View>
       </View>
     );
@@ -78,6 +85,7 @@ const TelaMeusPosts = ({ navigation, route }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#fbb8e1'
     },
     postContainer: {
         padding: 10,
@@ -101,7 +109,11 @@ const styles = StyleSheet.create({
       alignSelf: 'center',
       width: '80%',
       aspectRatio: 1
-    }
+    },
+    botao: {
+      textDecorationLine: 'underline',
+      color: 'blue'
+  }
 });
 
 export default TelaMeusPosts;

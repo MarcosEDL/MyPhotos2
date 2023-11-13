@@ -3,6 +3,8 @@ import { View, Text, TextInput, Button, StyleSheet, Pressable } from "react-nati
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import firebase from '../servicos/firebase';
 import Header from "../Componentes/Header";
+
+
 const TelaLogin = ({ navigation }) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -61,7 +63,8 @@ const styles = StyleSheet.create({
     container2: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginBottom: 220,      
     },
     header: {
         fontSize: 24,

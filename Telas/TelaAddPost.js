@@ -58,54 +58,7 @@ const TelaAddPost = ({navigation, route}) => {
         console.error(error);
       })
   };
-  //fim da parte nova do código
-
-/* parte do código que foi descontinuada pelo professor
-  const searchQuotes = async () => {
-    url = ""
-    if (selectedTag.length === 0) {
-      url = 'https://api.quotable.io/quotes/random'
-    } else {
-      url = 'https://api.quotable.io/quotes/random?tags='+selectedTag
-    }
-    fetch(url)
-      .then((response) => response.json())
-      .then(async (data) => {
-        if(data.length > 0) {
-          const database = getDatabase(firebase)
-          const storage = getStorage(firebase)
-          const postId = Date.now().toString()
-          var imageUrl = ''
-          if(image) {
-            const imageRef = storageRef(storage, 'images/' + postId + '.jpg')
-            const imageData = await fetch(image).then((response) => response.blob())
-            const uploadTask = await uploadBytes(imageRef, imageData)
-            imageUrl = await getDownloadURL(imageRef)
-          }
-          const userRef = ref(database, 'users/'+ route.params.uid+"/posts/"+postId)
-          update(userRef, { legenda: data[0].content, foto: imageUrl, geolocalizacao: location })
-            .then(() => {
-              console.log('Post Criado:', data[0].content);
-              setPostFailed(false)
-              navigation.navigate('posts', {uid: route.params.uid})
-            })
-            .catch((error) => {
-              setPostFailed(true)
-              console.error("Erro ao adicionar usuário:", error);
-            })
-        } else {
-          console.log("Sem citação nessa tag")
-          setPostFailed(true)
-        }
-      })
-      .catch((error) => {
-        setPostFailed(true)
-        console.error(error)})
-  }
-  */
-  //aqui continua normal o código
-
-
+  
   const searchTags = () => {
     fetch('https://api.quotable.io/tags')
       .then((response) => response.json())
@@ -136,6 +89,7 @@ const TelaAddPost = ({navigation, route}) => {
         <Button
           onPress={() => {navigation.navigate('camera', {uid: route.params.uid})}}
           title="Tirar Foto"
+          color={'#FF1493'}
         />
         <Picker
           selectedValue={selectedTag}
@@ -147,10 +101,9 @@ const TelaAddPost = ({navigation, route}) => {
           ))}
         </Picker>
         <Button
-          //anteriormente estava onPress={searchQuotes}
           onPress={savePost}
           title="Gerar post"
-          color="blue"
+          color={'#C71585'}
         />
       </View>  
     </View>
@@ -160,11 +113,13 @@ const TelaAddPost = ({navigation, route}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fbb8e1'
   },
   contentContainer: {
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 16,
+    marginBottom: 225,
   },
   tagItem: {
     flexDirection: 'row',

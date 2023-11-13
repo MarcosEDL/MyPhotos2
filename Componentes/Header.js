@@ -7,7 +7,7 @@ const Header = ({showNav, navigation, route}) => {
     <View style={styles.container}>
         <View style={styles.header}>
         <Image source={require('../assets/logo.jpg')} resizeMode="contain" style={styles.image} />
-        <Text style={styles.headerText}>MyPhotos</Text>
+        <Text style={styles.headerText}>Instagram Rosa</Text>
         </View>
         {showNav ?
         <View style={styles.icons}>
@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     headerText: {
+        marginLeft: 10,
         fontSize: 24,
         fontWeight: 'bold',
         color: 'white'
@@ -45,19 +46,20 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
-        backgroundColor: '#fff',
+        backgroundColor: '#fbb8e1',
         borderTopWidth: 1,
         borderTopColor: '#ccc',
         paddingHorizontal: 15,
-        paddingVertical: 10
+        paddingVertical: 5, 
     },
     image: {
         width: 90,
-        height: 90
+        height: 90,
+        backgroundColor: '#fbb8e1',
     },
     imageSmall: {
         width: 48,
-        width: 48
+        height: 48, 
     }
 });
 
