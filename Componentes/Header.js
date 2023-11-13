@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     headerText: {
+        marginLeft: 10,
         fontSize: 24,
         fontWeight: 'bold',
         color: 'white'
@@ -49,7 +50,7 @@ const styles = StyleSheet.create({
         borderTopWidth: 1,
         borderTopColor: '#ccc',
         paddingHorizontal: 15,
-        paddingVertical: 10
+        paddingVertical: 5, 
     },
     image: {
         width: 90,
@@ -57,7 +58,7 @@ const styles = StyleSheet.create({
     },
     imageSmall: {
         width: 48,
-        width: 48
+        height: 48, 
     }
 });
 

@@ -61,7 +61,8 @@ const styles = StyleSheet.create({
     container2: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginBottom: 220,      
     },
     header: {
         fontSize: 24,
